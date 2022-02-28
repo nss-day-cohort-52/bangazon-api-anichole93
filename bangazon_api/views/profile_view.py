@@ -27,8 +27,9 @@ class ProfileView(ViewSet):
     @action(methods=['GET'], detail=False, url_path="my-profile")
     def my_profile(self, request):
         """Get the current user's profile"""
+        user = User.objects.get(id=request.auth.user.id)
         try:
-            serializer = UserSerializer(User.objects.first())
+            serializer = UserSerializer(User.objects.get(pk=user.id))
             return Response(serializer.data)
         except User.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)

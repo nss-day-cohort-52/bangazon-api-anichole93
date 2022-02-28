@@ -3,11 +3,12 @@ from bangazon_api.models import Product
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    order_count = serializers.IntegerField(default=None)
     class Meta:
         model = Product
         fields = ('id', 'name', 'price', 'description', 'average_rating',
                   'quantity', 'location', 'image_path', 'category', 'store',
-                  'ratings', 'number_purchased')
+                  'ratings', 'number_purchased', 'order_count')
         depth = 1
 
 

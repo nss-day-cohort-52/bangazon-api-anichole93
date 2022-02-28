@@ -5,5 +5,5 @@
   disable=broad-except,imported-auth-user,missing-class-docstring,no-self-use,abstract-method
 
 [MASTER]
-  disable=C0114,
+  disable=C0114,CO115,C0116
 
