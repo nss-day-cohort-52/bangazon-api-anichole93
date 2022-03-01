@@ -8,7 +8,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('id', 'name', 'price', 'description', 'average_rating',
                   'quantity', 'location', 'image_path', 'category', 'store',
-                  'ratings', 'number_purchased', 'order_count')
+                  'ratings', 'number_purchased', 'order_count', 'likes')
         depth = 1
 
 
@@ -29,3 +29,7 @@ class AddRemoveRecommendationSerializer(serializers.Serializer):
 class AddProductRatingSerializer(serializers.Serializer):
     score = serializers.IntegerField()
     rating = serializers.CharField()
+    
+class AddProductLikeSerializer(serializers.Serializer):
+    customer = serializers.IntegerField()
+    product = serializers.IntegerField()
