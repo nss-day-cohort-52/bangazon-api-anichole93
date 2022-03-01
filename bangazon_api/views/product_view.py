@@ -9,10 +9,10 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.db.models import Q
 from bangazon_api.helpers import STATE_NAMES
-from bangazon_api.models import Product, Store, Category, Order, Rating, Recommendation
+from bangazon_api.models import Product, Store, Category, Order, Rating, Recommendation, Like
 from bangazon_api.serializers import (
     ProductSerializer, CreateProductSerializer, MessageSerializer,
-    AddProductRatingSerializer, AddRemoveRecommendationSerializer)
+    AddProductRatingSerializer, AddRemoveRecommendationSerializer, AddProductLikeSerializer)
 
 
 class ProductView(ViewSet):
@@ -167,6 +167,8 @@ class ProductView(ViewSet):
         order = request.query_params.get('order_by', None)
         direction = request.query_params.get('direction', None)
         name = request.query_params.get('name', None)
+        min_price = request.query_params.get('min_price', None)
+        location = request.query_params.get('location', None)
 
         if number_sold:
             products = products.annotate(
@@ -182,6 +184,13 @@ class ProductView(ViewSet):
 
         if name is not None:
             products = products.filter(name__icontains=name)
+            
+        if min_price is not None:
+            products = products.filter(price__gte=min_price)
+            
+        if location is not None:
+            products = products.filter(location__contains=location)
+            
 
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
@@ -345,3 +354,24 @@ class ProductView(ViewSet):
             )
 
         return Response({'message': 'Rating added'}, status=status.HTTP_201_CREATED)
+    
+    @action(methods=['post'], detail=True)
+    def like(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        like = Like.objects.create(
+            product=product,
+            customer=request.auth.user
+        )
+        like.save()
+        return Response({'message': 'Favorite added'}, status=status.HTTP_201_CREATED)
+
+    @action(methods=['delete'], detail=True)
+    def unlike(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        like = Like.objects.get(
+                product=product,
+                customer=request.auth.user
+            )
+        like.delete()
+
+        return Response({'message': 'Favorite deleted'}, status=status.HTTP_204_NO_CONTENT)
