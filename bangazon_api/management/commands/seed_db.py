@@ -92,27 +92,34 @@ class Command(BaseCommand):
             payment_type=user.payment_types.first(),
             completed_on=datetime.now()
         )
-        category = random.randint(1, Category.objects.count())
-        products = [product.id for product in Product.objects.filter(
-            category_id=category)]
+        if Category.objects.count() > 1:
+            category = random.randint(1, Category.objects.count())
+            products = [product.id for product in Product.objects.filter(
+                category_id=category)]
+        else: 
+            products = [product.id for product in Product.objects.all()]
         order.products.set(products)
 
     def create_open_orders(self, user):
         order = Order.objects.create(
             user=user
         )
-        category = random.randint(1, Category.objects.count())
-        products = [product.id for product in Product.objects.filter(
-            category_id=category)]
+        if Category.objects.count() > 1:
+            category = random.randint(1, Category.objects.count())
+            products = [product.id for product in Product.objects.filter(
+                category_id=category)]
+        else: 
+            products = [product.id for product in Product.objects.all()]
         order.products.set(products)
 
     def create_favorite(self, user):
-        store = Store.objects.get(pk=random.randint(1, Store.objects.count()))
+        if Store.objects.count() > 1:
+            store = Store.objects.get(pk=random.randint(1, Store.objects.count()))
 
-        Favorite.objects.create(
-            customer=user,
-            store=store
-        )
+            Favorite.objects.create(
+                customer=user,
+                store=store
+            )
 
     def create_ratings(self, user):
         for product in Product.objects.all():
