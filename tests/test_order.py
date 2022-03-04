@@ -3,7 +3,6 @@ from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
 from django.core.management import call_command
 from django.contrib.auth.models import User
-
 from bangazon_api.models import Order, Product
 
 
@@ -44,4 +43,4 @@ class OrderTests(APITestCase):
         response = self.client.delete(f'/api/orders/{self.order1.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    # TODO: Complete Order test
+    #TODO: Complete Order test
