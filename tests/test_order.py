@@ -27,6 +27,7 @@ class OrderTests(APITestCase):
             user=self.user,
             payment_type=self.payment_type
         )
+        # self.product1 = Product.objects.get(name="Hat")
 
         self.client.credentials(
             HTTP_AUTHORIZATION=f'Token {self.token.key}')
@@ -58,15 +59,9 @@ class OrderTests(APITestCase):
         self.assertEqual(order_updated.payment_type.id, data['payment_type'])
         
     # def test_add_product(self):
-    #     order = self.order1
-    #     product = self.product1
-    #     data = {
-    #         "order": order.id,
-    #         "product": product.id
-    #     }
-
-        
-    #     response = self.client.post(f'/api/products/{product.id}/add-to-order', data, format='json')
+    #     product = self.client.get('/api/products/1')
+    
+    #     response = self.client.post(f'/api/products/{product.data["id"]}/add_to_order')
 
     #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
